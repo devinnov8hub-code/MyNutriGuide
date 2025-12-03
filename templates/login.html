@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FoodScan — Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+</head>
+<body>
+  <div class="panel" role="main" aria-label="Login panel">
+    <div class="logo" aria-hidden="true">
+      <div class="mark" title="FoodScan">
+        <img src="{{ url_for('static', filename='logo_b.svg') }}" alt="FoodScan Logo" style="width: 20px;">       
+      </div>
+      <div>FoodScan</div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="center" role="heading" aria-level="1">
+        <h1>Welcome back</h1>
+        <p class="lead">Login to get started</p>
+      </div>
+
+      <form class="form-wrap" method="POST">
+        
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+              {% for message in messages %}
+                  <div class="alert alert-info">{{ message }}</div>
+              {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Email -->
+        <div>
+          <label class="field-label" for="email">Email Address</label>
+          <div class="input" title="Email">
+            <!-- mail icon -->
+             <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path  d="M0.2025 4.73876L7.90833 0.118758C8.03785 0.0410489 8.18605 0 8.33708 0C8.48812 0 8.63632 0.0410489 8.76583 0.118758L16.4642 4.73959C16.5259 4.7766 16.5771 4.82899 16.6125 4.89165C16.648 4.9543 16.6667 5.02508 16.6667 5.09709V15.6938C16.6667 15.9148 16.5789 16.1267 16.4226 16.283C16.2663 16.4393 16.0543 16.5271 15.8333 16.5271H0.833333C0.61232 16.5271 0.400358 16.4393 0.244078 16.283C0.0877973 16.1267 9.17272e-09 15.9148 9.17272e-09 15.6938V5.09626C-1.50983e-05 5.02425 0.0186315 4.95347 0.0541212 4.89081C0.089611 4.82816 0.140732 4.77577 0.2025 4.73876ZM1.66667 5.80459V14.8604H15V5.80376L8.33667 1.80376L1.66667 5.80376V5.80459ZM8.38333 10.4421L12.7967 6.72293L13.87 7.99793L8.395 12.6121L2.80333 8.00376L3.86333 6.71709L8.38333 10.4421V10.4421Z" fill="#4A70A9"/>
+            </svg>
+            <input id="email" name="email" type="email" placeholder="Enter Email" required />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="field-label" for="password">Password</label>
+          <div class="input">
+            <!-- lock icon -->
+            <svg width="15" height="18" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.5 5.83333H14.1667C14.3877 5.83333 14.5996 5.92113 14.7559 6.07741C14.9122 6.23369 15 6.44565 15 6.66667V16.6667C15 16.8877 14.9122 17.0996 14.7559 17.2559C14.5996 17.4122 14.3877 17.5 14.1667 17.5H0.833333C0.61232 17.5 0.400358 17.4122 0.244078 17.2559C0.0877973 17.0996 0 16.8877 0 16.6667V6.66667C0 6.44565 0.0877973 6.23369 0.244078 6.07741C0.400358 5.92113 0.61232 5.83333 0.833333 5.83333H2.5V5C2.5 3.67392 3.02678 2.40215 3.96447 1.46447C4.90215 0.526784 6.17392 0 7.5 0C8.82608 0 10.0979 0.526784 11.0355 1.46447C11.9732 2.40215 12.5 3.67392 12.5 5V5.83333ZM1.66667 7.5V15.8333H13.3333V7.5H1.66667ZM6.66667 10.8333H8.33333V12.5H6.66667V10.8333ZM3.33333 10.8333H5V12.5H3.33333V10.8333ZM10 10.8333H11.6667V12.5H10V10.8333ZM10.8333 5.83333V5C10.8333 4.11594 10.4821 3.2681 9.85702 2.64298C9.2319 2.01786 8.38405 1.66667 7.5 1.66667C6.61594 1.66667 5.7681 2.01786 5.14298 2.64298C4.51786 3.2681 4.16667 4.11594 4.16667 5V5.83333H10.8333Z" fill="#4A70A9"/>
+            </svg>
+
+
+
+            <input id="password" name="password" type="password" placeholder="Enter Password" required aria-describedby="showPwd" />
+            <button type="button" class="eye-btn" id="togglePwd" aria-label="Show or hide password" title="Show password">
+              <!-- eye icon -->
+              <svg id="eyeOpen" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 12s4.5-7 10-7 10 7 10 7-4.5 7-10 7S2 12 2 12z" stroke="#486fa8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="2.2" stroke="#486fa8" stroke-width="1.2"/>
+              </svg>
+              <svg id="eyeClosed" style="display:none" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.94 17.94L6.06 6.06" stroke="#486fa8" stroke-width="1.2" stroke-linecap="round" />
+                <path d="M2 12s4.5-7 10-7c2.13 0 4.1.6 5.75 1.64M22 12s-4.5 7-10 7c-2.13 0-4.1-.6-5.75-1.64" stroke="#486fa8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <div class="right-link" style="margin-top:8px;">
+              <a href="#">Forgot Password?</a>
+          </div>
+        </div>
+
+        <div>
+          <button class="btn" type="submit">Login</button>
+        </div>
+
+        <div style="text-align: center; margin-top: 15px;">
+            <a href="{{ url_for('auth.register') }}" style="font-size:13px; color:var(--brand); text-decoration:none; font-weight:600;">Need an account? Register</a>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="spacer" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    const pwd = document.getElementById('password');
+    const toggle = document.getElementById('togglePwd');
+    const eyeOpen = document.getElementById('eyeOpen');
+    const eyeClosed = document.getElementById('eyeClosed');
+
+    toggle.addEventListener('click', () => {
+      if (pwd.type === 'password') {
+        pwd.type = 'text';
+        eyeOpen.style.display = 'none';
+        eyeClosed.style.display = 'block';
+        toggle.title = 'Hide password';
+      } else {
+        pwd.type = 'password';
+        eyeOpen.style.display = 'block';
+        eyeClosed.style.display = 'none';
+        toggle.title = 'Show password';
+      }
+    });
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}");
+        });
+    }
+  </script>
+</body>
+</html>

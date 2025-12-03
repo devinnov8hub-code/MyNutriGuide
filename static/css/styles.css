@@ -1,0 +1,16 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+#camera-container video, #camera-container img {
+    transform: scaleX(-1); /* Mirror effect for selfie/webcam feel */
+}

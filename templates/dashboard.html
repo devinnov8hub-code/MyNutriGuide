@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>FoodScan — Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+</head>
+<body>
+  <div class="device" role="application" aria-label="FoodScan mobile screen">
+    <div class="screen">
+      <div class="top-row">
+        <a href="{{ url_for('main.dashboard') }}" class="brand" title="FoodScan">
+          <div class="sq">
+            <img src="{{ url_for('static', filename='logo_b.svg') }}" alt="Logo" style="width: 20px;">
+          </div>
+          <div>FoodScan</div>
+        </a>
+        <div class="avatar" aria-hidden="true">
+            {% if current_user.profile_picture %}
+                <img src="{{ url_for('static', filename=current_user.profile_picture) }}" alt="Profile">
+            {% else %}
+                <img src="{{ url_for('static', filename='default_profile.svg') }}" alt="Profile">
+            {% endif %}
+        </div>
+      </div>
+
+      <main class="center" role="main">
+        <div class="product-wrap" aria-hidden="false">
+            
+            <img class="product" src="{{ url_for('static', filename='image/pack.png') }}" alt="product photo" />
+          <div class="scan-bar" aria-hidden="true"></div>
+        </div>
+
+        <div>
+          <div class="title">Welcome, {{ current_user.first_name }}</div>
+          <div class="desc">
+            Scan any product and instantly see its details.
+            Point your camera at a product to reveal all the information you need.
+          </div>
+
+          <div class="cta">
+            <a class="btn" href="{{ url_for('main.scan') }}" role="button">Scan Now</a>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+      <a href="{{ url_for('main.scan') }}" class="nav-item active" title="Scan">
+        <svg width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0.78 8.33333H2.6C2.743 8.33333 2.86 8.21615 2.86 8.07292V2.34375H8.58C8.723 2.34375 8.84 2.22656 8.84 2.08333V0.260417C8.84 0.117187 8.723 0 8.58 0H2.73C1.508 0 0.52 0.989583 0.52 2.21354V8.07292C0.52 8.21615 0.637 8.33333 0.78 8.33333ZM17.42 2.34375H23.14V8.07292C23.14 8.21615 23.257 8.33333 23.4 8.33333H25.22C25.363 8.33333 25.48 8.21615 25.48 8.07292V2.21354C25.48 0.989583 24.492 0 23.27 0H17.42C17.277 0 17.16 0.117187 17.16 0.260417V2.08333C17.16 2.22656 17.277 2.34375 17.42 2.34375ZM8.58 22.6562H2.86V16.9271C2.86 16.7839 2.743 16.6667 2.6 16.6667H0.78C0.637 16.6667 0.52 16.7839 0.52 16.9271V22.7865C0.52 24.0104 1.508 25 2.73 25H8.58C8.723 25 8.84 24.8828 8.84 24.7396V22.9167C8.84 22.7734 8.723 22.6562 8.58 22.6562ZM25.22 16.6667H23.4C23.257 16.6667 23.14 16.7839 23.14 16.9271V22.6562H17.42C17.277 22.6562 17.16 22.7734 17.16 22.9167V24.7396C17.16 24.8828 17.277 25 17.42 25H23.27C24.492 25 25.48 24.0104 25.48 22.7865V16.9271C25.48 16.7839 25.363 16.6667 25.22 16.6667ZM25.74 11.3281H0.26C0.117 11.3281 0 11.4453 0 11.5885V13.4115C0 13.5547 0.117 13.6719 0.26 13.6719H25.74C25.883 13.6719 26 13.5547 26 13.4115V11.5885C26 11.4453 25.883 11.3281 25.74 11.3281Z" fill="white"/>
+        </svg>
+        <div>Scan</div>
+      </a>
+
+      <a href="{{ url_for('onboarding.onboarding_flow') }}" class="nav-item" title="Profile">
+        <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 22.875C1 21.2174 1.65848 19.6277 2.83058 18.4556C4.00268 17.2835 5.5924 16.625 7.25 16.625H19.75C21.4076 16.625 22.9973 17.2835 24.1694 18.4556C25.3415 19.6277 26 21.2174 26 22.875C26 23.7038 25.6708 24.4987 25.0847 25.0847C24.4987 25.6708 23.7038 26 22.875 26H4.125C3.2962 26 2.50134 25.6708 1.91529 25.0847C1.32924 24.4987 1 23.7038 1 22.875Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M13.5 10.375C16.0888 10.375 18.1875 8.27633 18.1875 5.6875C18.1875 3.09867 16.0888 1 13.5 1C10.9112 1 8.8125 3.09867 8.8125 5.6875C8.8125 8.27633 10.9112 10.375 13.5 10.375Z" stroke="white" stroke-width="2"/>
+        </svg>
+        <div>Profile</div>
+      </a>
+    </nav>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}");
+        });
+      }
+    </script>
+  </div>
+</body>
+</html>

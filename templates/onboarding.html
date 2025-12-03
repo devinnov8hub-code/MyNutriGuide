@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FoodScan — Onboarding</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+</head>
+<body>
+  <div class="panel" role="main" aria-label="Onboarding panel">
+    <div class="logo" aria-hidden="true">
+      <div class="mark" title="FoodScan">
+        <img src="{{ url_for('static', filename='logo_b.svg') }}" alt="FoodScan Logo" class="dark-logo">
+      </div>
+      <div style="padding-left: 0px; margin-left: 0%;">FoodScan</div>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="center" role="heading" aria-level="1">
+        <h1>Onboarding</h1>
+        <p class="lead">Help us personalize your experience</p>
+      </div>
+
+      <form class="form-wrap" method="POST">
+        
+        <!-- Age & Gender Row -->
+        <div style="display: flex; gap: 12px;">
+            <div style="flex: 1;">
+                <label class="field-label" for="age">Age</label>
+                <div class="input">
+                    <input type="number" id="age" name="age" placeholder="Age">
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <label class="field-label" for="gender">Gender</label>
+                <div class="input">
+                    <select id="gender" name="gender">
+                        <option value="">Select...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Prefer not to say">Prefer not to say</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Allergies -->
+        <div>
+            <label class="field-label">Allergies</label>
+            <div id="allergy-rows-container">
+                <!-- Rows added via JS -->
+            </div>
+            <button class="btn btn-small" type="button" id="add_allergy_btn" style="margin-top: 8px;">Add Another Allergy</button>
+            <input type="hidden" id="allergies" name="allergies">
+        </div>
+
+        <!-- Dietary Preferences -->
+        <div>
+            <label class="field-label" for="dietary_preferences">Dietary Preferences</label>
+            <div class="input">
+                <textarea id="dietary_preferences" name="dietary_preferences" placeholder="e.g., Vegan, Keto, Halal"></textarea>
+            </div>
+        </div>
+
+        <!-- Chronic Conditions -->
+        <div>
+            <label class="field-label" for="chronic_conditions">Chronic Conditions</label>
+            <div class="input">
+                <textarea id="chronic_conditions" name="chronic_conditions" placeholder="e.g., Ulcer, Diabetes, Hypertension"></textarea>
+            </div>
+        </div>
+
+        <!-- Medications -->
+        <div>
+            <label class="field-label" for="medications">Current Medications</label>
+            <div class="input">
+                <textarea id="medications" name="medications" placeholder="List any current medications"></textarea>
+            </div>
+        </div>
+
+        <!-- Medical History -->
+        <div>
+            <label class="field-label" for="medical_history">Other Medical History</label>
+            <div class="input">
+                <textarea id="medical_history" name="medical_history" placeholder="Any other relevant history"></textarea>
+            </div>
+        </div>
+
+        <div>
+          <button class="btn" type="submit">Complete Setup</button>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="spacer" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('allergy-rows-container');
+        const addBtn = document.getElementById('add_allergy_btn');
+        const hiddenInput = document.getElementById('allergies');
+        const form = document.querySelector('form');
+
+        function createAllergyRow(name = '', severity = 'Mild') {
+            const row = document.createElement('div');
+            row.className = 'input-group';
+            row.style.marginBottom = '10px';
+            
+            row.innerHTML = `
+                <div class="input" style="flex: 2;">
+                    <input type="text" class="allergy-name" placeholder="Allergy (e.g. Peanuts)" value="${name}">
+                </div>
+                <div class="input" style="flex: 1.5;">
+                    <select class="allergy-severity">
+                        <option value="Mild" ${severity === 'Mild' ? 'selected' : ''}>Mild</option>
+                        <option value="Moderate" ${severity === 'Moderate' ? 'selected' : ''}>Moderate</option>
+                        <option value="Severe" ${severity === 'Severe' ? 'selected' : ''}>Severe</option>
+                    </select>
+                </div>
+                <button type="button" class="remove-row-btn" style="background:none; border:none; color:#ff6b6b; cursor:pointer; padding:0 8px;" aria-label="Remove" title="Remove allergy">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            `;
+            
+            // Add remove functionality
+            row.querySelector('.remove-row-btn').addEventListener('click', function() {
+                if (container.children.length > 1) {
+                    container.removeChild(row);
+                } else {
+                    // If it's the last row, just clear it
+                    row.querySelector('.allergy-name').value = '';
+                    row.querySelector('.allergy-severity').value = 'Mild';
+                }
+            });
+
+            container.appendChild(row);
+        }
+
+        // Add initial row
+        createAllergyRow();
+
+        addBtn.addEventListener('click', function() {
+            createAllergyRow();
+        });
+
+        // Collect data on submit
+        form.addEventListener('submit', function(e) {
+            const rows = container.querySelectorAll('.input-group');
+            const allergies = [];
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.allergy-name').value.trim();
+                const severity = row.querySelector('.allergy-severity').value;
+                
+                if (name) {
+                    allergies.push({ name, severity });
+                }
+            });
+            
+            hiddenInput.value = JSON.stringify(allergies);
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}");
+            });
+        }
+    });
+  </script>
+</body>
+</html>
