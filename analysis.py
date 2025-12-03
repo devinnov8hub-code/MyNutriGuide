@@ -86,17 +86,19 @@ def analyze_image_vision(image_data_base64, user_profile):
     )
     
     prompt_text = (
-        f"Analyze this food image. Based on the visual information (ingredients, nutrition facts, or the food itself) "
-        f"and the user's profile below, provide a structured JSON response. "
-        f"The JSON must have the following fields:\n"
+        f"Analyze this food image using a combination of visual recognition and text extraction. "
+        f"1. Identify the product visually (like a reverse image search). "
+        f"2. Read any visible text (ingredients, nutrition facts). "
+        f"3. Search the web for additional product details if necessary. "
+        f"4. Combine this with your internal knowledge to provide a complete analysis.\n\n"
+        f"User Profile:\n{user_context}\n\n"
+        f"Provide a structured JSON response with the following fields:\n"
         f"- product_name: The name of the product.\n"
         f"- warnings: A list of strings (health warnings based on user profile).\n"
         f"- summary: A conversational summary of whether it's healthy and a recommendation (plain text, no markdown).\n"
-        f"- voice_response: Additionally, generate a friendly audio summary suitable for the user based on their profile. will be converted to audio with Elevenlabs\n\n"
-        f"{user_context}\n"
-        f"Return ONLY the JSON object, no markdown formatting."
-        f"if you dont recognize the food or cannot extract details, return 'Unknown Product' for product_name and appropriate default values for other fields."
-        f"provide all fields even if empty. and if its not an image of a food item, respond with summary indicating that."
+        f"- voice_response: A friendly audio summary suitable for the user based on their profile.\n\n"
+        f"Return ONLY the JSON object, no markdown formatting. "
+        f"If you don't recognize the food or cannot extract details, return 'Unknown Product' for product_name."
     )
 
     try:
@@ -115,6 +117,9 @@ def analyze_image_vision(image_data_base64, user_profile):
                         }
                     ]
                 }
+            ],
+            tools=[
+                {"type": "web_search"}
             ],
             max_tokens=1000,
             response_format={"type": "json_object"}

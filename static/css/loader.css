@@ -7,6 +7,7 @@
     background-color: #486fa8; /* Dark background for contrast */
     z-index: 9999;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
