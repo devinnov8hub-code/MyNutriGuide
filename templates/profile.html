@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>FoodScan — Edit Profile</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
+  <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+</head>
+<body>
+  <div id="global-loader">
+      <div class="logo-loader" id="loader">
+          <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img logo-base" alt="Logo Base">
+          
+          <div class="logo-fill-wrapper" id="fillWrapper">
+              <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img" alt="Logo Fill">
+          </div>
+      </div>
+  </div>
+
+  <div class="container">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="{{ url_for('main.dashboard') }}" class="back-btn" aria-label="Back">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </a>
+        <div class="page-title">Edit Profile</div>
+        <div style="width: 40px;"></div> <!-- Spacer -->
+    </div>
+
+    <form class="form-wrap" method="POST" enctype="multipart/form-data">
+        <!-- Profile Image -->
+        <div class="profile-header">
+            <div class="profile-image-wrapper">
+                {% if current_user.profile_picture and current_user.profile_picture != 'default_profile.svg' %}
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.profile_picture) }}" class="profile-image" id="profile-preview" alt="Profile">
+                {% else %}
+                    <img src="{{ url_for('static', filename='default_profile.svg') }}" class="profile-image" id="profile-preview" alt="Profile">
+                {% endif %}
+                <label class="edit-image-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                    </svg>
+                    <input type="file" name="profile_picture" accept="image/*" onchange="window.showLoader(); this.form.submit()">
+                </label>
+            </div>
+            <div style="font-weight: 600; font-size: 18px;">{{ current_user.first_name }} {{ current_user.last_name }}</div>
+            <div style="color: #7b8ea8; font-size: 14px;">{{ current_user.email }}</div>
+        </div>
+
+        <!-- Age & Gender Row -->
+        <div style="display: flex; gap: 12px;">
+            <div style="flex: 1;">
+                <label class="field-label" for="age">Age</label>
+                <div class="input">
+                    <input type="number" id="age" name="age" placeholder="Age" value="{{ current_user.age or '' }}">
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <label class="field-label" for="gender">Gender</label>
+                <div class="input">
+                    <select id="gender" name="gender">
+                        <option value="">Select...</option>
+                        <option value="Male" {% if current_user.gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if current_user.gender == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Prefer not to say" {% if current_user.gender == 'Prefer not to say' %}selected{% endif %}>Prefer not to say</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Allergies -->
+        <div>
+            <label class="field-label">Allergies</label>
+            <div id="allergy-rows-container">
+                <!-- Rows added via JS -->
+            </div>
+            <button class="btn btn-small" type="button" id="add_allergy_btn" style="margin-top: 8px;">Add Allergy</button>
+            <input type="hidden" id="allergies" name="allergies" value='{{ current_user.allergies or "[]" }}'>
+        </div>
+
+        <!-- Dietary Preferences -->
+        <div>
+            <label class="field-label" for="dietary_preferences">Dietary Preferences</label>
+            <div class="input">
+                <textarea id="dietary_preferences" name="dietary_preferences" placeholder="e.g., Vegan, Keto, Halal">{{ current_user.dietary_preferences or '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Chronic Conditions -->
+        <div>
+            <label class="field-label" for="chronic_conditions">Chronic Conditions</label>
+            <div class="input">
+                <textarea id="chronic_conditions" name="chronic_conditions" placeholder="e.g., Ulcer, Diabetes, Hypertension">{{ current_user.chronic_conditions or '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Medications -->
+        <div>
+            <label class="field-label" for="medications">Current Medications</label>
+            <div class="input">
+                <textarea id="medications" name="medications" placeholder="List any current medications">{{ current_user.medications or '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Medical History -->
+        <div>
+            <label class="field-label" for="medical_history">Other Medical History</label>
+            <div class="input">
+                <textarea id="medical_history" name="medical_history" placeholder="Any other relevant history">{{ current_user.medical_history or '' }}</textarea>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <button class="btn" type="submit">Save Changes</button>
+        </div>
+
+    </form>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+      <a href="{{ url_for('main.scan') }}" class="nav-item" title="Scan">
+        <svg width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0.78 8.33333H2.6C2.743 8.33333 2.86 8.21615 2.86 8.07292V2.34375H8.58C8.723 2.34375 8.84 2.22656 8.84 2.08333V0.260417C8.84 0.117187 8.723 0 8.58 0H2.73C1.508 0 0.52 0.989583 0.52 2.21354V8.07292C0.52 8.21615 0.637 8.33333 0.78 8.33333ZM17.42 2.34375H23.14V8.07292C23.14 8.21615 23.257 8.33333 23.4 8.33333H25.22C25.363 8.33333 25.48 8.21615 25.48 8.07292V2.21354C25.48 0.989583 24.492 0 23.27 0H17.42C17.277 0 17.16 0.117187 17.16 0.260417V2.08333C17.16 2.22656 17.277 2.34375 17.42 2.34375ZM8.58 22.6562H2.86V16.9271C2.86 16.7839 2.743 16.6667 2.6 16.6667H0.78C0.637 16.6667 0.52 16.7839 0.52 16.9271V22.7865C0.52 24.0104 1.508 25 2.73 25H8.58C8.723 25 8.84 24.8828 8.84 24.7396V22.9167C8.84 22.7734 8.723 22.6562 8.58 22.6562ZM25.22 16.6667H23.4C23.257 16.6667 23.14 16.7839 23.14 16.9271V22.6562H17.42C17.277 22.6562 17.16 22.7734 17.16 22.9167V24.7396C17.16 24.8828 17.277 25 17.42 25H23.27C24.492 25 25.48 24.0104 25.48 22.7865V16.9271C25.48 16.7839 25.363 16.6667 25.22 16.6667ZM25.74 11.3281H0.26C0.117 11.3281 0 11.4453 0 11.5885V13.4115C0 13.5547 0.117 13.6719 0.26 13.6719H25.74C25.883 13.6719 26 13.5547 26 13.4115V11.5885C26 11.4453 25.883 11.3281 25.74 11.3281Z" fill="white"/>
+        </svg>
+        <div>Scan</div>
+      </a>
+
+      <a href="{{ url_for('main.profile') }}" class="nav-item active" title="Profile">
+        <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 22.875C1 21.2174 1.65848 19.6277 2.83058 18.4556C4.00268 17.2835 5.5924 16.625 7.25 16.625H19.75C21.4076 16.625 22.9973 17.2835 24.1694 18.4556C25.3415 19.6277 26 21.2174 26 22.875C26 23.7038 25.6708 24.4987 25.0847 25.0847C24.4987 25.6708 23.7038 26 22.875 26H4.125C3.2962 26 2.50134 25.6708 1.91529 25.0847C1.32924 24.4987 1 23.7038 1 22.875Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M13.5 10.375C16.0888 10.375 18.1875 8.27633 18.1875 5.6875C18.1875 3.09867 16.0888 1 13.5 1C10.9112 1 8.8125 3.09867 8.8125 5.6875C8.8125 8.27633 10.9112 10.375 13.5 10.375Z" stroke="white" stroke-width="2"/>
+        </svg>
+        <div>Profile</div>
+      </a>
+    </nav>
+
+    <script>
+      function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('allergy-rows-container');
+        const addBtn = document.getElementById('add_allergy_btn');
+        const hiddenInput = document.getElementById('allergies');
+        const form = document.querySelector('form');
+
+        // Load existing allergies
+        let existingAllergies = [];
+        try {
+            existingAllergies = JSON.parse(hiddenInput.value);
+        } catch(e) {
+            existingAllergies = [];
+        }
+
+        function createAllergyRow(name = '', severity = 'Mild') {
+            const row = document.createElement('div');
+            row.className = 'input';
+            row.style.marginBottom = '10px';
+            row.style.padding = '8px';
+            row.style.gap = '8px';
+            
+            row.innerHTML = `
+                <input type="text" class="allergy-name" placeholder="Allergy" value="${name}" style="flex: 2;">
+                <select class="allergy-severity" style="flex: 1; border-left: 1px solid #eee; padding-left: 8px;">
+                    <option value="Mild" ${severity === 'Mild' ? 'selected' : ''}>Mild</option>
+                    <option value="Moderate" ${severity === 'Moderate' ? 'selected' : ''}>Moderate</option>
+                    <option value="Severe" ${severity === 'Severe' ? 'selected' : ''}>Severe</option>
+                </select>
+                <button type="button" class="remove-row-btn" style="background:none; border:none; color:#ff6b6b; cursor:pointer; padding:0 4px;" aria-label="Remove">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            `;
+            
+            row.querySelector('.remove-row-btn').addEventListener('click', function() {
+                container.removeChild(row);
+            });
+
+            container.appendChild(row);
+        }
+
+        // Populate existing
+        if (existingAllergies.length > 0) {
+            existingAllergies.forEach(a => createAllergyRow(a.name, a.severity));
+        } else {
+            // createAllergyRow(); // Don't create empty row by default on edit page
+        }
+
+        addBtn.addEventListener('click', function() {
+            createAllergyRow();
+        });
+
+        // Collect data on submit
+        form.addEventListener('submit', function(e) {
+            const rows = container.querySelectorAll('.input');
+            const allergies = [];
+            
+            rows.forEach(row => {
+                const name = row.querySelector('.allergy-name').value.trim();
+                const severity = row.querySelector('.allergy-severity').value;
+                
+                if (name) {
+                    allergies.push({ name, severity });
+                }
+            });
+            
+            hiddenInput.value = JSON.stringify(allergies);
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+              navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}");
+            });
+        }
+      });
+    </script>
+    <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
+</body>
+</html>

@@ -34,8 +34,16 @@ def upload_image():
     # 3. Analyze with OpenAI Vision (GPT-4o)
     analysis_text = analyze_image_vision(image_data, user_profile)
 
-    json_analysis = json.loads(analysis_text)
-    
+    try:
+        json_analysis = json.loads(analysis_text)
+    except json.JSONDecodeError:
+        # Fallback if the model returns plain text or an error message
+        json_analysis = {
+            'product_name': 'Analysis Error',
+            'warnings': [],
+            'summary': analysis_text if analysis_text else "Could not analyze image.",
+            'voice_response': "I'm sorry, I couldn't analyze that image properly."
+        }
     
     voice_response = json_analysis.get('voice_response', None)
     

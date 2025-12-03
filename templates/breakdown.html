@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>FoodScan — Breakdown</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/breakdown.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
   <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 </head>
 <body>
+  <div id="global-loader">
+      <div class="logo-loader" id="loader">
+          <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img logo-base" alt="Logo Base">
+          
+          <div class="logo-fill-wrapper" id="fillWrapper">
+              <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img" alt="Logo Fill">
+          </div>
+      </div>
+  </div>
+
   <div class="container">
     <!-- Top Bar -->
     <div class="top-bar">
@@ -52,17 +63,14 @@
     <!-- Product Header -->
     <div class="product-header">
         <div class="product-name">{{ analysis.product_name }}</div>
-        <div class="product-category">{{ analysis.category }}</div>
     </div>
 
-    <!-- Ingredients Section -->
+    <!-- Summary Section -->
     <div class="section">
-        <div class="section-title">Ingredients</div>
-        <div class="ingredients-list">
-            {% for ingredient in analysis.ingredients %}
-            <div class="ingredient-item">{{ ingredient }}</div>
-            {% endfor %}
-        </div>
+        <div class="section-title">Summary</div>
+        <p style="font-size: 14px; color: #4a607a; line-height: 1.6; margin: 0;">
+            {{ analysis.summary }}
+        </p>
     </div>
 
 
@@ -98,7 +106,7 @@
         <div>Scan</div>
       </a>
 
-      <a href="{{ url_for('onboarding.onboarding_flow') }}" class="nav-item" title="Profile">
+      <a href="{{ url_for('main.profile') }}" class="nav-item" title="Profile">
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M1 22.875C1 21.2174 1.65848 19.6277 2.83058 18.4556C4.00268 17.2835 5.5924 16.625 7.25 16.625H19.75C21.4076 16.625 22.9973 17.2835 24.1694 18.4556C25.3415 19.6277 26 21.2174 26 22.875C26 23.7038 25.6708 24.4987 25.0847 25.0847C24.4987 25.6708 23.7038 26 22.875 26H4.125C3.2962 26 2.50134 25.6708 1.91529 25.0847C1.32924 24.4987 1 23.7038 1 22.875Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
         <path d="M13.5 10.375C16.0888 10.375 18.1875 8.27633 18.1875 5.6875C18.1875 3.09867 16.0888 1 13.5 1C10.9112 1 8.8125 3.09867 8.8125 5.6875C8.8125 8.27633 10.9112 10.375 13.5 10.375Z" stroke="white" stroke-width="2"/>
@@ -138,5 +146,6 @@
           });
       }
     </script>
+    <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
 </body>
 </html>

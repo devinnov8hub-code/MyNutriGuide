@@ -4,6 +4,10 @@ from flask_migrate import Migrate
 from config import Config
 from models import db, User
 import json
+from werkzeug.utils import secure_filename
+import os
+import uuid
+from PIL import Image
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -83,6 +87,45 @@ def create_app(config_class=Config):
                              analysis=analysis_data,
                              audio_filename=audio_filename)
 
+    @main.route('/profile', methods=['GET', 'POST'])
+    @login_required
+    def profile():
+        if request.method == 'POST':
+            try:
+                current_user.age = request.form.get('age', type=int)
+                current_user.gender = request.form.get('gender')
+                current_user.allergies = request.form.get('allergies')
+                current_user.dietary_preferences = request.form.get('dietary_preferences')
+                current_user.chronic_conditions = request.form.get('chronic_conditions')
+                current_user.medications = request.form.get('medications')
+                current_user.medical_history = request.form.get('medical_history')
+                
+                # Handle Profile Picture
+                if 'profile_picture' in request.files:
+                    file = request.files['profile_picture']
+                    if file and file.filename:
+                        filename = secure_filename(file.filename)
+                        name_without_ext = os.path.splitext(filename)[0]
+                        unique_filename = f"{uuid.uuid4().hex}_{name_without_ext}.webp"
+                        
+                        upload_folder = os.path.join(app.root_path, 'static', 'uploads')
+                        os.makedirs(upload_folder, exist_ok=True)
+                        
+                        image = Image.open(file)
+                        file_path = os.path.join(upload_folder, unique_filename)
+                        image.save(file_path, 'WEBP')
+                        
+                        current_user.profile_picture = unique_filename
+
+                db.session.commit()
+                flash('Profile updated successfully!')
+                return redirect(url_for('main.profile'))
+            except Exception as e:
+                db.session.rollback()
+                flash(f'An error occurred: {str(e)}')
+        
+        return render_template('profile.html')
+
     @main.route('/settings', methods=['GET', 'POST'])
     @login_required
     def settings():
@@ -102,4 +145,4 @@ def create_app(config_class=Config):
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5005, host='0.0.0.0')
+    app.run(debug=True, port=5000, host='0.0.0.0')

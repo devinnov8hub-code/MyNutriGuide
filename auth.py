@@ -40,9 +40,14 @@ def register():
         last_name = request.form.get('last_name')
         email = request.form.get('email')
         password = request.form.get('password')
+        confirm_password = request.form.get('confirm_password')
         
         if not email or not password or len(password) < 6:
             flash('Invalid input. Password must be at least 6 characters.')
+            return redirect(url_for('auth.register'))
+            
+        if password != confirm_password:
+            flash('Passwords do not match.')
             return redirect(url_for('auth.register'))
             
         if User.query.filter_by(email=email).first():

@@ -1,0 +1,83 @@
+#global-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #486fa8; /* Dark background for contrast */
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+    visibility: visible;
+}
+
+#global-loader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* 1. The Container keeping everything aligned */
+.logo-loader {
+    position: relative;
+    width: 150px; /* Adjust to your logo size */
+    height: 150px;
+}
+
+/* 2. Common styles for both logo layers */
+.logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Keeps logo proportions */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* 3. The "Empty" background logo */
+.logo-base {
+    filter: grayscale(100%) brightness(50%); /* Makes it gray/dim */
+    opacity: 0.3;
+}
+
+/* 4. The "Liquid" wrapper - This clips the colored logo */
+.logo-fill-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%; /* Starts empty */
+    overflow: hidden; /* This cuts off the top of the image */
+    animation: fillUp 2.5s ease-in-out forwards;
+}
+
+/* 5. The Colored Logo inside the wrapper */
+/* IMPORTANT: It must be the full height of the parent, 
+   even when the wrapper is small. */
+.logo-fill-wrapper .logo-img {
+    height: 150px; /* Must match the .logo-loader height */
+    bottom: 0;
+    top: auto;
+}
+
+/* 6. The Heartbeat Animation Class (Added via JS later) */
+.heartbeat {
+    animation: pulse 1.5s infinite;
+}
+
+/* --- Animations --- */
+
+/* Liquid Fill Animation */
+@keyframes fillUp {
+    0% { height: 0%; }
+    100% { height: 100%; }
+}
+
+/* Heartbeat Animation */
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}

@@ -237,3 +237,48 @@ html, body { height: 100%; background: #ffffff; font-family: 'Inter', -apple-sys
         border-bottom-right-radius: 24px;
     }
 }
+
+/* Dropdown Styles */
+.avatar-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(47,79,111,0.15);
+    padding: 8px 0;
+    min-width: 150px;
+    z-index: 1000;
+    margin-top: 8px;
+    border: 1px solid rgba(47,79,111,0.05);
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 10px 16px;
+    color: #2f4f6f;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: #f0f2f5;
+}
+
+.dropdown-divider {
+    height: 1px;
+    margin: 4px 0;
+    overflow: hidden;
+    background-color: #e9ecef;
+}

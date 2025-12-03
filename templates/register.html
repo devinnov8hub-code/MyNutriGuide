@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FoodScan — Register</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
   <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 </head>
 <body>
+  <div id="global-loader">
+      <div class="logo-loader" id="loader">
+          <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img logo-base" alt="Logo Base">
+          
+          <div class="logo-fill-wrapper" id="fillWrapper">
+              <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img" alt="Logo Fill">
+          </div>
+      </div>
+  </div>
+
   <div class="panel" role="main" aria-label="Register panel">
     <div class="logo" aria-hidden="true">
       <div class="mark" title="FoodScan">
@@ -95,7 +106,28 @@
         </div>
 
         <!-- Confirm Password -->
-        <
+        <div>
+          <label class="field-label" for="confirm_password">Confirm Password</label>
+          <div class="input">
+            <!-- lock icon -->
+            <svg width="15" height="18" viewBox="0 0 15 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.5 5.83333H14.1667C14.3877 5.83333 14.5996 5.92113 14.7559 6.07741C14.9122 6.23369 15 6.44565 15 6.66667V16.6667C15 16.8877 14.9122 17.0996 14.7559 17.2559C14.5996 17.4122 14.3877 17.5 14.1667 17.5H0.833333C0.61232 17.5 0.400358 17.4122 0.244078 17.2559C0.0877973 17.0996 0 16.8877 0 16.6667V6.66667C0 6.44565 0.0877973 6.23369 0.244078 6.07741C0.400358 5.92113 0.61232 5.83333 0.833333 5.83333H2.5V5C2.5 3.67392 3.02678 2.40215 3.96447 1.46447C4.90215 0.526784 6.17392 0 7.5 0C8.82608 0 10.0979 0.526784 11.0355 1.46447C11.9732 2.40215 12.5 3.67392 12.5 5V5.83333ZM1.66667 7.5V15.8333H13.3333V7.5H1.66667ZM6.66667 10.8333H8.33333V12.5H6.66667V10.8333ZM3.33333 10.8333H5V12.5H3.33333V10.8333ZM10 10.8333H11.6667V12.5H10V10.8333ZM10.8333 5.83333V5C10.8333 4.11594 10.4821 3.2681 9.85702 2.64298C9.2319 2.01786 8.38405 1.66667 7.5 1.66667C6.61594 1.66667 5.7681 2.01786 5.14298 2.64298C4.51786 3.2681 4.16667 4.11594 4.16667 5V5.83333H10.8333Z" fill="#4A70A9"/>
+            </svg>
+
+            <input id="confirm_password" name="confirm_password" type="password" placeholder="Confirm Password" required minlength="6" />
+            <button type="button" class="eye-btn" id="toggleConfirmPwd" aria-label="Show or hide password" title="Show password">
+              <!-- eye icon -->
+              <svg id="eyeOpenConfirm" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 12s4.5-7 10-7 10 7 10 7-4.5 7-10 7S2 12 2 12z" stroke="#486fa8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="2.2" stroke="#486fa8" stroke-width="1.2"/>
+              </svg>
+              <svg id="eyeClosedConfirm" style="display:none" viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.94 17.94L6.06 6.06" stroke="#486fa8" stroke-width="1.2" stroke-linecap="round" />
+                <path d="M2 12s4.5-7 10-7c2.13 0 4.1.6 5.75 1.64M22 12s-4.5 7-10 7c-2.13 0-4.1-.6-5.75-1.64" stroke="#486fa8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
 
         <div>
           <button class="btn" type="submit">Register</button>
@@ -132,11 +164,32 @@
       }
     });
 
+    // Toggle confirm password visibility
+    const confirmPwd = document.getElementById('confirm_password');
+    const toggleConfirm = document.getElementById('toggleConfirmPwd');
+    const eyeOpenConfirm = document.getElementById('eyeOpenConfirm');
+    const eyeClosedConfirm = document.getElementById('eyeClosedConfirm');
+
+    toggleConfirm.addEventListener('click', () => {
+      if (confirmPwd.type === 'password') {
+        confirmPwd.type = 'text';
+        eyeOpenConfirm.style.display = 'none';
+        eyeClosedConfirm.style.display = 'block';
+        toggleConfirm.title = 'Hide password';
+      } else {
+        confirmPwd.type = 'password';
+        eyeOpenConfirm.style.display = 'block';
+        eyeClosedConfirm.style.display = 'none';
+        toggleConfirm.title = 'Show password';
+      }
+    });
+
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}");
         });
     }
   </script>
+  <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
 </body>
 </html>

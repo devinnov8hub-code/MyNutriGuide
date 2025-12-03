@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>FoodScan — Login</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
   <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 </head>
 <body>
+  <div id="global-loader">
+      <div class="logo-loader" id="loader">
+          <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img logo-base" alt="Logo Base">
+          
+          <div class="logo-fill-wrapper" id="fillWrapper">
+              <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img" alt="Logo Fill">
+          </div>
+      </div>
+  </div>
+
   <div class="panel" role="main" aria-label="Login panel">
     <div class="logo" aria-hidden="true">
       <div class="mark" title="FoodScan">
@@ -16,7 +27,7 @@
       <div>FoodScan</div>
     </div>
 
-    <div class="content-wrapper">
+    <div class="content-wrapper" style="margin-top: 180px !important;">
       <div class="center" role="heading" aria-level="1">
         <h1>Welcome back</h1>
         <p class="lead">Login to get started</p>
@@ -114,5 +125,6 @@
         });
     }
   </script>
+  <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
 </body>
 </html>

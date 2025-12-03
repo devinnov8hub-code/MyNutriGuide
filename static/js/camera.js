@@ -101,7 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
     analyzeButton.addEventListener('click', async () => {
         const imageData = photo.getAttribute('src');
         
-        loading.style.display = 'block';
+        if (window.showLoader) window.showLoader();
+        const loaderText = document.getElementById('loader-text');
+        if (loaderText) loaderText.style.display = 'block';
+
         analyzeButton.disabled = true;
         retakeButton.disabled = true;
         errorMessage.style.display = 'none';
@@ -126,7 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error(err);
             errorMessage.textContent = err.message;
             errorMessage.style.display = 'block';
-            loading.style.display = 'none';
+            if (window.hideLoader) window.hideLoader();
+            const loaderText = document.getElementById('loader-text');
+            if (loaderText) loaderText.style.display = 'none';
+
             analyzeButton.disabled = false;
             retakeButton.disabled = false;
         }

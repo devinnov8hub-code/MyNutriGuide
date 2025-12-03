@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>FoodScan — Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/loader.css') }}">
   <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
 </head>
 <body>
+  <div id="global-loader">
+      <div class="logo-loader" id="loader">
+          <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img logo-base" alt="Logo Base">
+          
+          <div class="logo-fill-wrapper" id="fillWrapper">
+              <img src="{{ url_for('static', filename='logo.svg') }}" class="logo-img" alt="Logo Fill">
+          </div>
+      </div>
+  </div>
+
   <div class="device" role="application" aria-label="FoodScan mobile screen">
     <div class="screen">
       <div class="top-row">
@@ -17,12 +28,19 @@
           </div>
           <div>FoodScan</div>
         </a>
-        <div class="avatar" aria-hidden="true">
-            {% if current_user.profile_picture %}
-                <img src="{{ url_for('static', filename=current_user.profile_picture) }}" alt="Profile">
-            {% else %}
-                <img src="{{ url_for('static', filename='default_profile.svg') }}" alt="Profile">
-            {% endif %}
+        <div class="avatar-container" onclick="toggleDropdown(event)">
+            <div class="avatar" aria-hidden="true">
+                {% if current_user.profile_picture and current_user.profile_picture != 'default_profile.svg' %}
+                    <img src="{{ url_for('static', filename='uploads/' + current_user.profile_picture) }}" alt="Profile">
+                {% else %}
+                    <img src="{{ url_for('static', filename='default_profile.svg') }}" alt="Profile">
+                {% endif %}
+            </div>
+            <div id="profile-dropdown" class="dropdown-menu">
+                <a href="{{ url_for('main.profile') }}" class="dropdown-item">Profile</a>
+                <div class="dropdown-divider"></div>
+                <a href="{{ url_for('auth.logout') }}" class="dropdown-item">Logout</a>
+            </div>
         </div>
       </div>
 
@@ -56,7 +74,7 @@
         <div>Scan</div>
       </a>
 
-      <a href="{{ url_for('onboarding.onboarding_flow') }}" class="nav-item" title="Profile">
+      <a href="{{ url_for('main.profile') }}" class="nav-item" title="Profile">
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M1 22.875C1 21.2174 1.65848 19.6277 2.83058 18.4556C4.00268 17.2835 5.5924 16.625 7.25 16.625H19.75C21.4076 16.625 22.9973 17.2835 24.1694 18.4556C25.3415 19.6277 26 21.2174 26 22.875C26 23.7038 25.6708 24.4987 25.0847 25.0847C24.4987 25.6708 23.7038 26 22.875 26H4.125C3.2962 26 2.50134 25.6708 1.91529 25.0847C1.32924 24.4987 1 23.7038 1 22.875Z" stroke="white" stroke-width="2" stroke-linejoin="round"/>
         <path d="M13.5 10.375C16.0888 10.375 18.1875 8.27633 18.1875 5.6875C18.1875 3.09867 16.0888 1 13.5 1C10.9112 1 8.8125 3.09867 8.8125 5.6875C8.8125 8.27633 10.9112 10.375 13.5 10.375Z" stroke="white" stroke-width="2"/>
@@ -71,7 +89,26 @@
           navigator.serviceWorker.register("{{ url_for('static', filename='sw.js') }}");
         });
       }
+
+      function toggleDropdown(event) {
+          event.stopPropagation();
+          document.getElementById('profile-dropdown').classList.toggle('show');
+      }
+
+      // Close dropdown when clicking outside
+      window.onclick = function(event) {
+          if (!event.target.closest('.avatar-container')) {
+              var dropdowns = document.getElementsByClassName("dropdown-menu");
+              for (var i = 0; i < dropdowns.length; i++) {
+                  var openDropdown = dropdowns[i];
+                  if (openDropdown.classList.contains('show')) {
+                      openDropdown.classList.remove('show');
+                  }
+              }
+          }
+      }
     </script>
+    <script src="{{ url_for('static', filename='js/loader.js') }}"></script>
   </div>
 </body>
 </html>

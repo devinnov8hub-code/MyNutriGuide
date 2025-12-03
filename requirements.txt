@@ -8,3 +8,4 @@ Pillow
 python-dotenv
 pytest
 requests
+gunicorn
