@@ -11,30 +11,41 @@ auth = Blueprint('auth', __name__)
 oauth = OAuth()
 
 def get_google_oauth_client():
-    return oauth.create_client('google')
+    try:
+        return oauth.create_client('google')
+    except Exception:
+        return None
 
 @auth.record_once
 def on_load(state):
     oauth.init_app(state.app)
-    oauth.register(
-        name='google',
-        client_id=state.app.config['GOOGLE_CLIENT_ID'],
-        client_secret=state.app.config['GOOGLE_CLIENT_SECRET'],
-        server_metadata_url=state.app.config['GOOGLE_DISCOVERY_URL'],
-        client_kwargs={
-            'scope': 'openid email profile'
-        }
-    )
+    # Only register Google OAuth if credentials are provided
+    if state.app.config.get('GOOGLE_CLIENT_ID') and state.app.config.get('GOOGLE_CLIENT_SECRET'):
+        oauth.register(
+            name='google',
+            client_id=state.app.config['GOOGLE_CLIENT_ID'],
+            client_secret=state.app.config['GOOGLE_CLIENT_SECRET'],
+            server_metadata_url=state.app.config.get('GOOGLE_DISCOVERY_URL', 'https://accounts.google.com/.well-known/openid-configuration'),
+            client_kwargs={
+                'scope': 'openid email profile'
+            }
+        )
 
 @auth.route('/login/google')
 def google_login():
     google = get_google_oauth_client()
+    if not google:
+        flash('Google OAuth is not configured. Please contact the administrator.')
+        return redirect(url_for('auth.login'))
     redirect_uri = url_for('auth.google_callback', _external=True)
     return google.authorize_redirect(redirect_uri)
 
 @auth.route('/auth/callback')
 def google_callback():
     google = get_google_oauth_client()
+    if not google:
+        flash('Google OAuth is not configured. Please contact the administrator.')
+        return redirect(url_for('auth.login'))
     try:
         token = google.authorize_access_token()
         user_info = token.get('userinfo')
